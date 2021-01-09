@@ -10,12 +10,12 @@ use PhpOne\LaravelAnnotation\Parser;
 class GenerateRouteCommand extends Command
 {
     protected $signature = "annotation-route:generate
-                        {--scanDir=}
+                        {--scanDirs=}
                         {--outFile=}
     ";
     protected $description = "
                         sacn annotations dir and generate larael route
-                        --scanDir: your annotations dir , ex: app/Controllers,app/Api
+                        --scanDirs: your annotations dir , ex: app/Controllers,app/Api
                         --outFile: your route file
     ";
 
@@ -34,6 +34,8 @@ class GenerateRouteCommand extends Command
 
         $parser = new Parser(explode(',', $this->option('scanDirs')));
         $parser->writeRoute($this->option('outFile'));
+
+        $this->info("write route Success ");
     }
 
 }

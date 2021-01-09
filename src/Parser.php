@@ -91,6 +91,7 @@ class Parser
         $this->createFile($outFile);
         foreach ($this->routeData as $route) {
             file_put_contents($outFile, "\r\n". $route, FILE_APPEND);
+            fwrite(STDOUT, sprintf("\r\n wirte route: %s success \r\n", $route));
         }
 
     }
