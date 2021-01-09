@@ -53,7 +53,7 @@ class Parser
                         $controllerAnnotation = $classInfo['c'][$routeAnnotation];
 
                         $routeStruce->controller = $classInfo['s'];
-                        $routeStruce->uri .= $controllerAnnotation->prefix. "/";
+                        $routeStruce->uri .= rtrim($controllerAnnotation->prefix, "/"). "/";
                     }
                 }
             }
@@ -69,7 +69,7 @@ class Parser
                         $methodAnnotation = $methdConfig[$methodAnnotationClass] ?? [];
                         $routeStruce->method = $methodAnnotation->method;
                         $routeStruce->action = $methodName;
-                        $routeStruce->uri .= $methodAnnotation->path;
+                        $routeStruce->uri .= ltrim($methodAnnotation->path, "/");
                     }
 
                 }
