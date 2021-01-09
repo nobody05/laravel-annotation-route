@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Support\ServiceProvider;
 use PhpOne\LaravelAnnotation\Command\GenerateRouteCommand;
 
-class RouteProviders extends ServiceProvider
+class RouteAnnotationProviders extends ServiceProvider
 {
     public function boot()
     {

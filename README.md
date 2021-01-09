@@ -8,14 +8,25 @@ composer require phpone/laravel-annontation-route
 
 ### Usage
 
+- add RouteAnnotationProviders to config/app.php
 ```php
 <?php
-use PhpOne\LaravelAnnotation\Parser;
 
-$parser = new Parser([__DIR__.'/Controller']);
-$parser->writeRoute(__DIR__.'/route/api.php');
+return [
+    'providers' => [
+        //.......other serviceProvider
+        \PhpOne\LaravelAnnotation\Providers\RouteAnnotationProviders::class,                  
+    ]
+];
 
 ```
+- generate route file by command
+```shell
+php artisan annotation-route:generate
+```
+
+
+
 this function will scan Annotations of  Controller dir , and wirte into api.php
 the file like this 
 ```php
