@@ -26,23 +26,19 @@ class Scanner
      */
     public function classList()
     {
-        $directoryLocator = new DirectoriesSourceLocator(
+        $locators[] = new DirectoriesSourceLocator(
             $this->scanDirs,
             (new BetterReflection())->astLocator()
         );
-        $composerLocator = null;
         if (file_exists(dirname(dirname(dirname(__DIR__))).'/autoload.php')) {
             $classLoader = require dirname(dirname(dirname(__DIR__))).'/autoload.php';
-            $composerLocator = new ComposerSourceLocator(
+            $locators[] = new ComposerSourceLocator(
                 $classLoader,
                 (new BetterReflection())->astLocator()
             );
         }
 
-        $classReflector = new ClassReflector(new AggregateSourceLocator([
-            $directoryLocator,
-            $composerLocator
-        ]));
+        $classReflector = new ClassReflector(new AggregateSourceLocator($locators));
 
         return $classReflector->getAllClasses();
     }
