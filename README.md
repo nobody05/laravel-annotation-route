@@ -42,6 +42,7 @@ Route::get("api/company/info","CompanyController@info");
 - @Mapping
 - @PostMapping
 - @GetMapping
+- @Group
 
 
 
