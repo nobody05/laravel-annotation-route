@@ -6,16 +6,23 @@ namespace PhpOne\LaravelAnnotation;
 
 use PhpOne\LaravelAnnotation\Annotations\Controller;
 use PhpOne\LaravelAnnotation\Annotations\GetMapping;
+use PhpOne\LaravelAnnotation\Annotations\Group;
 use PhpOne\LaravelAnnotation\Annotations\Mapping;
 use PhpOne\LaravelAnnotation\Annotations\PostMapping;
+use PhpOne\LaravelAnnotation\Exception\ControllerNotFoundException;
+use PhpOne\LaravelAnnotation\RouteStruce\Group as StruceGroup;
+use PhpOne\LaravelAnnotation\RouteStruce\Route;
 
 class Parser
 {
     public $scanDirs;
     public $routeData;
+
     const ROUTEANNOTATIONS = [
+        Group::class,
         Controller::class
     ];
+
     const MEDHODANNOTATIONS = [
         Mapping::class,
         PostMapping::class,
@@ -42,18 +49,23 @@ class Parser
         $classs = $collecter->getAnnotations();
 
         foreach ($classs as $className => $classInfo) {
-            $routeStruce = new RouteStruct();
-
             if (!empty($classInfo['c'])) {
+                $routeStruce = new Route();
                 foreach (self::ROUTEANNOTATIONS as $routeAnnotation) {
                     if (!empty($classInfo['c'][$routeAnnotation])) {
-                        /**
-                         * @var $controllerAnnotation Controller
-                         */
                         $controllerAnnotation = $classInfo['c'][$routeAnnotation];
-
-                        $routeStruce->controller = $classInfo['s'];
-                        $routeStruce->uri .= rtrim($controllerAnnotation->prefix, "/"). "/";
+                        if ($controllerAnnotation instanceof Controller) {
+                            $routeStruce->controller = $classInfo['s'];
+                            $routeStruce->uri .= rtrim($controllerAnnotation->prefix, "/"). "/";
+                        } else if ($controllerAnnotation instanceof Group) {
+                            $routeGroup = new StruceGroup();
+                            $routeGroup->namespace = $controllerAnnotation->namespace;
+                            $routeGroup->middlewares = $controllerAnnotation->middlewares;
+                            $routeGroup->prefix = $controllerAnnotation->prefix;
+                            $routeStruce->controller = $classInfo['s'];
+                            $routeStruce->needIndent = true;
+                            $routeGroup->routes[] = $routeStruce;
+                        }
                     }
                 }
             }
@@ -61,8 +73,8 @@ class Parser
             $methods = $classInfo['m']??[];
             foreach ($methods as $methodName => $methdConfig) {
                 foreach (self::MEDHODANNOTATIONS as $methodAnnotationClass) {
-
                     if (!empty($methdConfig[$methodAnnotationClass])) {
+                        if (empty($routeStruce)) throw new ControllerNotFoundException();
                         /**
                          * @var $methodAnnotation Mapping
                          */
@@ -71,11 +83,14 @@ class Parser
                         $routeStruce->action = $methodName;
                         $routeStruce->uri .= ltrim($methodAnnotation->path, "/");
                     }
-
                 }
-
             }
-            $this->routeData[] = $routeStruce->generateRoute();
+            if (!empty($routeGroup)) {
+                $this->routeData[] = $routeGroup->toString();
+            } else {
+                $this->routeData[] = $routeStruce->toString();
+            }
+
         }
 
         return $this->routeData;
