@@ -16,6 +16,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class Controller
 {
-    public $prefix;
+    public string $prefix;
 
 }

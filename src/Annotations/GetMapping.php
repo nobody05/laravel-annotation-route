@@ -17,6 +17,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class GetMapping extends Mapping
 {
-    public $method = "get";
+    public string $method = "get";
 
 }

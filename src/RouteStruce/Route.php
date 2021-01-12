@@ -11,15 +11,15 @@ namespace PhpOne\LaravelAnnotation\RouteStruce;
  */
 class Route
 {
-    public $controller;
-    public $action;
-    public $uri;
-    public $method;
-    private $iPrefix = "Route::";
-    private $iSuffix = ");";
-    public $needIndent = false;
+    public string $controller;
+    public string $action;
+    public string $uri;
+    public string $method;
+    private string $iPrefix = "Route::";
+    private string $iSuffix = ");";
+    public bool $needIndent = false;
 
-    public function toString()
+    public function toString(): string
     {
         return sprintf("\r\n%s%s%s('%s','%s@%s'%s",
             $this->needIndent?'    ':'',

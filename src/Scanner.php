@@ -24,7 +24,7 @@ class Scanner
     /**
      * @return \Roave\BetterReflection\Reflection\ReflectionClass[]
      */
-    public function classList()
+    public function classList(): array
     {
         $locators[] = new DirectoriesSourceLocator(
             $this->scanDirs,

@@ -10,6 +10,7 @@ use PhpOne\LaravelAnnotation\Annotations\Group;
 use PhpOne\LaravelAnnotation\Annotations\Mapping;
 use PhpOne\LaravelAnnotation\Annotations\PostMapping;
 use PhpOne\LaravelAnnotation\Exception\ControllerNotFoundException;
+use PhpOne\LaravelAnnotation\RouteStruce\File;
 use PhpOne\LaravelAnnotation\RouteStruce\Group as StruceGroup;
 use PhpOne\LaravelAnnotation\RouteStruce\Route;
 
@@ -17,6 +18,7 @@ class Parser
 {
     public $scanDirs;
     public $routeData;
+    public $file;
 
     const ROUTEANNOTATIONS = [
         Group::class,
@@ -36,6 +38,7 @@ class Parser
      */
     public function __construct(array $scanDirs)
     {
+        $this->file = new File();
         $this->scanDirs = $scanDirs;
     }
 
@@ -86,8 +89,10 @@ class Parser
                 }
             }
             if (!empty($routeGroup)) {
+                $this->file->appendContent($routeGroup->toString());
                 $this->routeData[] = $routeGroup->toString();
             } else {
+                $this->file->appendContent($routeStruce->toString());
                 $this->routeData[] = $routeStruce->toString();
             }
 
@@ -99,16 +104,20 @@ class Parser
     /**
      * your route file
      * @param $outFile
+     * @param bool $force
      */
-    public function writeRoute($outFile)
+    public function writeRoute($outFile, $force = false)
     {
         $this->getRoute();
         $this->createFile($outFile);
-        foreach ($this->routeData as $route) {
-            file_put_contents($outFile, "\r\n". $route, FILE_APPEND);
-            fwrite(STDOUT, sprintf("\r\n wirte route: %s success \r\n", $route));
+        if ($force) {
+            file_put_contents($outFile, $this->file->toString());
+        } else {
+            foreach ($this->routeData as $route) {
+                file_put_contents($outFile, "\r\n". $route, FILE_APPEND);
+                fwrite(STDOUT, sprintf("\r\n wirte route: %s success \r\n", $route));
+            }
         }
-
     }
 
     public function createFile($file)
