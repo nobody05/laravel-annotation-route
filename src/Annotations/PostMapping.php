@@ -15,6 +15,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class PostMapping extends Mapping
 {
-    public $method = "post";
+    public string $method = "post";
 
 }

@@ -16,20 +16,20 @@ namespace PhpOne\LaravelAnnotation\RouteStruce;
  */
 class Group
 {
-    public $middlewares;
-    public $prefix;
-    public $namespace;
+    public string $middlewares;
+    public string $prefix;
+    public string $namespace;
 
     /**
      * @var Route[] $routes
      */
-    public $routes;
-    private $iPrefix = "Route::group(";
-    private $iSuffix = ");";
-    private $attributes;
+    public array $routes;
+    private string $iPrefix = "Route::group(";
+    private string $iSuffix = ");";
+    private string $attributes;
 
 
-    public function toString()
+    public function toString(): string
     {
         $s = $this->iPrefix;
         $s .= $this->attributeString();
@@ -39,7 +39,7 @@ class Group
         return $s;
     }
 
-    protected function closureString()
+    protected function closureString(): string
     {
         $s = ', function () {';
         $s .= $this->routeString();
@@ -48,7 +48,7 @@ class Group
         return $s;
     }
 
-    protected function routeString()
+    protected function routeString(): string
     {
         $s = '';
         foreach ($this->routes as $route) {
@@ -58,7 +58,7 @@ class Group
         return $s;
     }
 
-    protected function attributeString()
+    protected function attributeString(): string
     {
         $s = '[';
         $s .= $this->prefixString();
@@ -71,17 +71,17 @@ class Group
 
     }
 
-    protected function namespaceString()
+    protected function namespaceString(): string
     {
         return !empty($this->namespace) ? "'namespace' => '". $this->namespace."'," : '';
     }
 
-    protected function prefixString()
+    protected function prefixString(): string
     {
         return !empty($this->prefix) ? "'prefix' => '". $this->prefix."'," : '';
     }
 
-    protected function middlewaresString()
+    protected function middlewaresString(): string
     {
         if (empty($this->getMiddlewares())) return "";
         $s = " 'middleware' => [";

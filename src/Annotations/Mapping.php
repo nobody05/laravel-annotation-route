@@ -15,7 +15,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 abstract class Mapping
 {
-    public $path;
-    public $method;
+    public string $path;
+    public string $method;
 
 }

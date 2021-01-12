@@ -12,7 +12,7 @@ class TestParser extends TestCase
     public function testParser()
     {
         $parser = new Parser([__DIR__.'/Controller']);
-        $parser->writeRoute(__DIR__.'/route/api.php');
+        $parser->writeRoute(__DIR__.'/route/api1.php', true);
     }
 
 }

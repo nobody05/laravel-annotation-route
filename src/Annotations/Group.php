@@ -15,9 +15,9 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class Group
 {
-    public $middlewares;
-    public $namespace;
-    public $prefix;
+    public string $middlewares;
+    public string $namespace;
+    public string $prefix;
 
     /**
      * @return mixed
